@@ -1,0 +1,62 @@
+<view class="container">
+  <!-- 月份选择 -->
+  <view class="month-bar card">
+    <text class="month-prev" bindtap="changeMonth" data-dir="prev">◀</text>
+    <text class="month-text">{{currentMonth}}</text>
+    <text class="month-next" bindtap="changeMonth" data-dir="next">▶</text>
+  </view>
+
+  <!-- 月度统计 -->
+  <view class="summary-bar card">
+    <view class="summary-item">
+      <text class="summary-label">收入</text>
+      <text class="summary-value text-success">¥{{monthIncome}}</text>
+    </view>
+    <view class="summary-item">
+      <text class="summary-label">支出</text>
+      <text class="summary-value text-danger">¥{{monthExpense}}</text>
+    </view>
+    <view class="summary-item">
+      <text class="summary-label">结余</text>
+      <text class="summary-value">¥{{balance}}</text>
+    </view>
+  </view>
+
+  <!-- 筛选 -->
+  <view class="filter-bar">
+    <view class="filter-item {{activeType === 0 ? 'active' : ''}}" bindtap="filterType" data-type="0">全部</view>
+    <view class="filter-item {{activeType === 1 ? 'active' : ''}}" bindtap="filterType" data-type="1">收入</view>
+    <view class="filter-item {{activeType === 2 ? 'active' : ''}}" bindtap="filterType" data-type="2">支出</view>
+    <view class="filter-item {{activeType === 3 ? 'active' : ''}}" bindtap="filterType" data-type="3">转账</view>
+  </view>
+
+  <!-- 账目列表 -->
+  <view class="list-container">
+    <block wx:for="{{accounts}}" wx:key="id">
+      <view class="account-card card" bindtap="goEdit" data-item="{{item}}">
+        <view class="card-header flex-between">
+          <text class="card-category">{{item.category || '未分类'}}</text>
+          <text class="card-amount {{item.type === 1 ? 'text-success' : item.type === 2 ? 'text-danger' : 'text-info'}}">
+            {{item.type === 1 ? '+' : item.type === 2 ? '-' : '⇄'}} ¥{{item.amount}}
+          </text>
+        </view>
+        <view class="card-body flex-between">
+          <text class="card-remark text-secondary">{{item.remark || '-'}}</text>
+          <text class="card-date text-secondary">{{item.date}}</text>
+        </view>
+        <view class="card-footer flex-between" wx:if="{{item.fromAccount || item.toAccount}}">
+          <text class="card-account text-secondary">{{item.fromAccount || ''}}</text>
+          <text class="card-account text-secondary">{{item.toAccount || ''}}</text>
+        </view>
+      </view>
+    </block>
+
+    <view class="empty-state" wx:if="{{accounts.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无账目记录</text>
+    </view>
+  </view>
+
+  <!-- 添加按钮 -->
+  <view class="fab-btn" bindtap="goAdd">+</view>
+</view>
