@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="logo-section">
+    <text class="logo-icon">📒</text>
+    <text class="app-title">记账本</text>
+    <text class="app-desc">轻松记录每一笔收支</text>
+  </view>
+
+  <view class="login-section">
+    <button class="btn btn-primary" bindtap="handleLogin">
+      微信登录
+    </button>
+    <view class="test-login">
+      <text class="test-text">开发测试：</text>
+      <button class="btn btn-default" size="mini" bindtap="handleTestLogin">
+        使用测试账号
+      </button>
+    </view>
+  </view>
+</view>

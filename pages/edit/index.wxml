@@ -1,0 +1,61 @@
+<view class="container">
+  <!-- 类型选择 -->
+  <view class="type-selector card">
+    <view class="type-item {{formData.type === 1 ? 'active income' : ''}}" bindtap="selectType" data-type="1">
+      <text class="type-icon">↑</text>
+      <text>收入</text>
+    </view>
+    <view class="type-item {{formData.type === 2 ? 'active expense' : ''}}" bindtap="selectType" data-type="2">
+      <text class="type-icon">↓</text>
+      <text>支出</text>
+    </view>
+    <view class="type-item {{formData.type === 3 ? 'active transfer' : ''}}" bindtap="selectType" data-type="3">
+      <text class="type-icon">⇄</text>
+      <text>转账</text>
+    </view>
+  </view>
+
+  <!-- 金额输入 -->
+  <view class="amount-section card">
+    <text class="amount-symbol">¥</text>
+    <input class="amount-input" type="digit" placeholder="请输入金额" value="{{formData.amount}}" bindinput="onAmountInput" />
+  </view>
+
+  <!-- 日期选择 -->
+  <view class="form-item card">
+    <text class="form-label">日期</text>
+    <picker mode="date" value="{{formData.date}}" bindchange="onDateChange">
+      <view class="picker-value">{{formData.date || '选择日期'}}</view>
+    </picker>
+  </view>
+
+  <!-- 分类/原因 -->
+  <view class="form-item card">
+    <text class="form-label">分类</text>
+    <picker mode="selector" range="{{categories}}" value="{{categoryIndex}}" bindchange="onCategoryChange">
+      <view class="picker-value">{{formData.category || '选择分类'}}</view>
+    </picker>
+  </view>
+
+  <!-- 账户选择（仅转账时显示） -->
+  <view class="account-section card" wx:if="{{formData.type === 3}}">
+    <text class="form-label">转出账户</text>
+    <input class="form-input" placeholder="如：微信" value="{{formData.fromAccount}}" bindinput="onFromAccountInput" />
+    <text class="form-label" style="margin-top: 20rpx;">转入账户</text>
+    <input class="form-input" placeholder="如：支付宝" value="{{formData.toAccount}}" bindinput="onToAccountInput" />
+  </view>
+
+  <!-- 备注 -->
+  <view class="form-item card">
+    <text class="form-label">备注</text>
+    <textarea class="form-textarea" placeholder="添加备注..." value="{{formData.remark}}" bindinput="onRemarkInput" maxlength="200" />
+  </view>
+
+  <!-- 底部按钮 -->
+  <view class="bottom-bar">
+    <button class="btn btn-danger" wx:if="{{isEdit}}" bindtap="handleDelete">删除</button>
+    <button class="btn {{formData.type && formData.amount ? 'btn-primary' : 'btn-disabled'}}" bindtap="handleSubmit">
+      {{isEdit ? '保存' : '添加'}}
+    </button>
+  </view>
+</view>
