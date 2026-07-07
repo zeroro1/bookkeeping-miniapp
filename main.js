@@ -1,8 +1,7 @@
 import { createSSRApp } from 'vue'
 import App from './App.vue'
 
-const app = createSSRApp(App)
-
-app.mount('#app')
-
-export default app
+export function createApp() {
+  const app = createSSRApp(App)
+  return { app }
+}
