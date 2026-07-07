@@ -45,7 +45,7 @@ async function handleLogin() {
     uni.setStorageSync('userId', loginRes.data.userId)
     uni.setStorageSync('openid', loginRes.data.openid)
 
-    uni.switchTab({ url: '/pages/index/index' })
+    uni.reLaunch({ url: '/pages/index/index' })
   } catch (err) {
     console.error('登录失败', err)
   } finally {
@@ -60,7 +60,7 @@ async function handleTestLogin() {
     uni.setStorageSync('token', res.data.token)
     uni.setStorageSync('userId', res.data.userId)
     uni.setStorageSync('openid', res.data.openid)
-    uni.switchTab({ url: '/pages/index/index' })
+    uni.reLaunch({ url: '/pages/index/index' })
   } catch (err) {
     console.error('测试登录失败', err)
   } finally {
