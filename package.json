@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "微信小程序记账应用",
   "dependencies": {
-    "dayjs": "^1.11.10"
-  },
-  "devDependencies": {}
+    "dayjs": "^1.11.21"
+  }
 }
