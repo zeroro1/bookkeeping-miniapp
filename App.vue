@@ -1,20 +1,22 @@
 <template>
   <div>
-    <router-view />
+    <block>
+      <router-view />
+    </block>
   </div>
 </template>
 
-<script setup>
-import { onLaunch } from 'dcloudio/uni-app'
-onLaunch(() => {
-  console.log('App Launch')
-  // 检查登录状态
-  const token = uni.getStorageSync('token')
-  const userId = uni.getStorageSync('userId')
-  if (!token || !userId) {
-    uni.reLaunch({ url: '/pages/login/index' })
+<script>
+export default {
+  onLaunch() {
+    console.log('App Launch')
+    const token = uni.getStorageSync('token')
+    const userId = uni.getStorageSync('userId')
+    if (!token || !userId) {
+      uni.reLaunch({ url: '/pages/login/index' })
+    }
   }
-})
+}
 </script>
 
 <style>
