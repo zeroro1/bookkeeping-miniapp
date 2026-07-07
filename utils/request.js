@@ -4,7 +4,7 @@ const BASE_URL = 'http://localhost:8080/api'
 /**
  * 通用请求方法
  */
-function request(url, method = 'GET', data = {}) {
+export function request(url, method = 'GET', data = {}) {
   return new Promise((resolve, reject) => {
     const token = uni.getStorageSync('token')
     uni.request({
@@ -12,7 +12,7 @@ function request(url, method = 'GET', data = {}) {
       method: method,
       data: data,
       header: {
-        'Content-Type': method === 'GET' ? 'application/json' : 'application/json',
+        'Content-Type': 'application/json',
         'Authorization': token ? 'Bearer ' + token : ''
       },
       success(res) {
@@ -41,11 +41,18 @@ function request(url, method = 'GET', data = {}) {
   })
 }
 
-module.exports = {
-  BASE_URL,
-  request,
-  get: (url, data) => request(url, 'GET', data),
-  post: (url, data) => request(url, 'POST', data),
-  put: (url, data) => request(url, 'PUT', data),
-  del: (url, data) => request(url, 'DELETE', data)
+export function get(url, data) {
+  return request(url, 'GET', data)
+}
+
+export function post(url, data) {
+  return request(url, 'POST', data)
+}
+
+export function put(url, data) {
+  return request(url, 'PUT', data)
+}
+
+export function del(url, data) {
+  return request(url, 'DELETE', data)
 }
