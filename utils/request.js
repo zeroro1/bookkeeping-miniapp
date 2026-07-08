@@ -1,5 +1,5 @@
 // 后端 API 地址
-const BASE_URL = 'http://localhost:8080/api'
+const BASE_URL = 'https://120.26.28.23/api'
 
 /**
  * 通用请求方法
