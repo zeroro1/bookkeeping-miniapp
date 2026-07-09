@@ -14,9 +14,15 @@
       }
     },
     {
-      "path": "pages/edit/index",
+      "path": "pages/add/index",
       "style": {
         "navigationBarTitleText": "添加明细"
+      }
+    },
+    {
+      "path": "pages/detail/index",
+      "style": {
+        "navigationBarTitleText": "查看明细"
       }
     }
   ],

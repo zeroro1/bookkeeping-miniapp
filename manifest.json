@@ -1,19 +1,19 @@
 {
-  "name": "bookkeeping-miniapp",
-  "appid": "",
-  "description": "微信小程序记账应用 - uni-app",
-  "versionName": "1.0.0",
-  "versionCode": "100",
-  "transformPx": false,
-  "mp-weixin": {
-    "appid": "",
-    "setting": {
-      "urlCheck": false
+    "name" : "bookkeeping-miniapp",
+    "appid" : "",
+    "description" : "微信小程序记账应用 - uni-app",
+    "versionName" : "1.0.0",
+    "versionCode" : "100",
+    "transformPx" : false,
+    "mp-weixin" : {
+        "appid" : "wx9db6d49c952450a5",
+        "setting" : {
+            "urlCheck" : false
+        },
+        "usingComponents" : true,
+        "optimization" : {
+            "subPackages" : true
+        }
     },
-    "usingComponents": true,
-    "optimization": {
-      "subPackages": true
-    }
-  },
-  "vueVersion": "3"
+    "vueVersion" : "3"
 }

@@ -1,5 +1,5 @@
 // 后端 API 地址（必须使用 HTTPS）
-const BASE_URL = 'https://www.jizhangben.icu/api'
+const BASE_URL = 'http://120.26.28.23:80/api'
 
 /**
  * 通用请求方法

@@ -140,11 +140,11 @@ function filterType(index) {
 }
 
 function goEdit(item) {
-  uni.navigateTo({ url: '/pages/edit/index?id=' + item.id })
+  uni.navigateTo({ url: '/pages/detail/index?id=' + item.id })
 }
 
 function goAdd() {
-  uni.navigateTo({ url: '/pages/edit/index' })
+  uni.navigateTo({ url: '/pages/add/index' })
 }
 
 onMounted(() => {
