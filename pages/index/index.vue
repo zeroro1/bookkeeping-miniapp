@@ -73,6 +73,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { onShow } from '@dcloudio/uni-app'
 import { request } from '../../utils/request'
 import dayjs from 'dayjs'
 
@@ -85,7 +86,6 @@ const monthIncome = ref('0.00')
 const monthExpense = ref('0.00')
 const balance = ref('0.00')
 
-// 计算金额样式
 function amountClass(item) {
   if (item.type === 1) return 'text-success'
   if (item.type === 2) return 'text-danger'
@@ -98,7 +98,6 @@ function amountPrefix(item) {
   return '⇄'
 }
 
-// 加载账目
 async function loadAccounts() {
   const userId = uni.getStorageSync('userId')
   if (!userId) return
@@ -110,7 +109,6 @@ async function loadAccounts() {
     const res = await request('/account/list', 'GET', params)
     const list = res.data || []
 
-    // 计算统计
     let inc = 0, exp = 0
     list.forEach(a => {
       if (a.type === 1) inc += parseFloat(a.amount)
@@ -126,7 +124,6 @@ async function loadAccounts() {
   }
 }
 
-// 切换月份
 function changeMonth(dir) {
   const now = dayjs(currentMonth.value)
   if (dir === 'prev') {
@@ -137,23 +134,24 @@ function changeMonth(dir) {
   loadAccounts()
 }
 
-// 筛选
 function filterType(index) {
   activeType.value = index
   loadAccounts()
 }
 
-// 去编辑页
 function goEdit(item) {
   uni.navigateTo({ url: '/pages/edit/index?id=' + item.id })
 }
 
-// 去新增页
 function goAdd() {
   uni.navigateTo({ url: '/pages/edit/index' })
 }
 
 onMounted(() => {
+  loadAccounts()
+})
+
+onShow(() => {
   loadAccounts()
 })
 </script>
@@ -239,6 +237,18 @@ onMounted(() => {
 .card-amount {
   font-size: 32rpx;
   font-weight: bold;
+}
+
+.card-amount.text-success {
+  color: #52c41a;
+}
+
+.card-amount.text-danger {
+  color: #ff4d4f;
+}
+
+.card-amount.text-info {
+  color: #1890ff;
 }
 
 .card-remark, .card-date {

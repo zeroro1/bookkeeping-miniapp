@@ -20,7 +20,7 @@
       <input
         class="amount-input"
         type="digit"
-        placeholder="请输入金额"
+        placeholder="输入金额"
         :value="formData.amount"
         @input="onAmountInput"
       />
@@ -75,7 +75,6 @@
     </view>
   </view>
 </template>
-
 <script setup>
 import { ref, reactive, computed, onMounted } from 'vue'
 import { request } from '../../utils/request'
@@ -114,7 +113,8 @@ formData.date = today.getFullYear() + '-' +
   String(today.getDate()).padStart(2, '0')
 
 onMounted(async () => {
-  const query = getCurrentPages()[getCurrentPages().length - 1].options
+  const pages = getCurrentPages()
+  const query = pages[pages.length - 1].options
   if (query.id) {
     isEdit.value = true
     editId.value = query.id
@@ -196,6 +196,10 @@ async function handleSubmit() {
   }
 
   const userId = uni.getStorageSync('userId')
+  if (!userId) {
+    return uni.showToast({ title: '请先登录', icon: 'none' })
+  }
+
   const data = {
     type: formData.type,
     amount: parseFloat(formData.amount),
@@ -206,7 +210,7 @@ async function handleSubmit() {
     remark: formData.remark
   }
 
-  uni.showLoading({ title: isEdit.value ? '保存中...' : '添加中...' })
+  uni.showLoading({ title: isEdit.value ? '保存中..' : '添加中..' })
   try {
     if (isEdit.value) {
       await request('/account/' + editId.value, 'PUT', data)
@@ -229,7 +233,7 @@ function handleDelete() {
     content: '确定要删除这条账目吗？',
     success: async (res) => {
       if (res.confirm) {
-        uni.showLoading({ title: '删除中...' })
+        uni.showLoading({ title: '删除中..' })
         try {
           await request('/account/' + editId.value, 'DELETE')
           uni.showToast({ title: '删除成功' })
@@ -244,7 +248,6 @@ function handleDelete() {
   })
 }
 </script>
-
 <style scoped>
 .container {
   padding: 20rpx;
@@ -286,18 +289,18 @@ function handleDelete() {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40rpx;
+  padding: 30rpx 40rpx;
 }
 
 .amount-symbol {
-  font-size: 48rpx;
+  font-size: 40rpx;
   font-weight: bold;
   color: #333;
   margin-right: 10rpx;
 }
 
 .amount-input {
-  font-size: 64rpx;
+  font-size: 56rpx;
   font-weight: bold;
   color: #333;
   text-align: center;
