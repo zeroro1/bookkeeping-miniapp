@@ -16,7 +16,7 @@
     {
       "path": "pages/edit/index",
       "style": {
-        "navigationBarTitleText": "编辑账目"
+        "navigationBarTitleText": "添加明细"
       }
     }
   ],
