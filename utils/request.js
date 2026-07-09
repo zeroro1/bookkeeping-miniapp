@@ -1,5 +1,5 @@
-// 后端 API 地址（必须使用 HTTPS，HTTP 会被阿里云 ICP 备案拦截）
-const BASE_URL = 'https://www.jizhangben.me/api'
+// 后端 API 地址（必须使用 HTTPS）
+const BASE_URL = 'https://www.jizhangben.icu/api'
 
 /**
  * 通用请求方法
