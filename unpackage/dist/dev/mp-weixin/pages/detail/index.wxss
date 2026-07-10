@@ -1,0 +1,31 @@
+.container.data-v-2fd5b0a7 { min-height: 100vh; background: #F8FAFC;
+}
+.page-header.data-v-2fd5b0a7 {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  padding: 32rpx 32rpx 28rpx;
+  box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.2);
+}
+.page-title.data-v-2fd5b0a7 { font-size: 34rpx; font-weight: 700; color: #fff; letter-spacing: 2rpx;
+}
+.bottom-bar.data-v-2fd5b0a7 {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding: 24rpx 32rpx; background: #fff;
+  box-shadow: 0 -4rpx 16rpx rgba(0,0,0,0.04);
+  display: flex; gap: 20rpx; z-index: 10;
+}
+.delete-btn.data-v-2fd5b0a7, .save-btn.data-v-2fd5b0a7 {
+  flex: 1; height: 96rpx; border-radius: 48rpx;
+  font-size: 32rpx; font-weight: 600; border: none; color: #fff;
+}
+.save-btn.data-v-2fd5b0a7 {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  box-shadow: 0 4rpx 16rpx rgba(99, 102, 241, 0.3);
+}
+.delete-btn.data-v-2fd5b0a7 {
+  background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+  box-shadow: 0 4rpx 16rpx rgba(239, 68, 68, 0.3);
+}
+.btn-disabled.data-v-2fd5b0a7 { background: #CBD5E1 !important; box-shadow: none !important;
+}
+.delete-btn.data-v-2fd5b0a7:active, .save-btn.data-v-2fd5b0a7:active { opacity: 0.85;
+}

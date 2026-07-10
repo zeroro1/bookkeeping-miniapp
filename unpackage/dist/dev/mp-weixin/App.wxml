@@ -1,0 +1,1 @@
+<view><block u-s="{{['d']}}"><router-view u-i="7654413d-0" bind:__l="__l"/></block></view>

@@ -1,73 +1,67 @@
 <template>
   <view class="container">
-    <!-- 月份选择 -->
-    <view class="month-bar card">
-      <text class="nav-arrow" @tap="changeMonth('prev')">&#8249;</text>
-      <text class="month-text">{{ currentMonth }}</text>
-      <text class="nav-arrow" @tap="changeMonth('next')">&#8250;</text>
-    </view>
-
-    <!-- 月度统计 -->
-    <view class="summary-bar card">
-      <view class="summary-item">
-        <text class="summary-label">收入</text>
-        <text class="summary-value text-success">{{ monthIncome }}</text>
+    <view class="header-card">
+      <view class="header-top">
+        <MonthPicker v-model="currentMonth" @change="onMonthChange" />
       </view>
-      <view class="summary-item">
-        <text class="summary-label">支出</text>
-        <text class="summary-value text-danger">{{ monthExpense }}</text>
-      </view>
-      <view class="summary-item">
-        <text class="summary-label">结余</text>
-        <text class="summary-value">{{ balance }}</text>
-      </view>
-    </view>
-
-    <!-- 筛选 -->
-    <view class="filter-bar card">
-      <view
-        v-for="(tab, i) in tabs"
-        :key="i"
-        class="filter-item"
-        :class="{ active: activeType === i }"
-        @tap="filterType(i)"
-      >
-        {{ tab }}
+      <view class="summary-grid">
+        <view class="summary-item">
+          <text class="summary-label">收入</text>
+          <text class="summary-value income">{{ monthIncome }}</text>
+        </view>
+        <view class="summary-divider"></view>
+        <view class="summary-item">
+          <text class="summary-label">支出</text>
+          <text class="summary-value expense">{{ monthExpense }}</text>
+        </view>
+        <view class="summary-divider"></view>
+        <view class="summary-item">
+          <text class="summary-label">结余</text>
+          <text class="summary-value" :class="balanceClass">{{ balance }}</text>
+        </view>
       </view>
     </view>
 
-    <!-- 账目列表 -->
+    <view class="tabs-card card">
+      <view class="tabs-list">
+        <view v-for="(tab, i) in tabs" :key="i" class="tab-item" :class="{ active: activeType === i }" @tap="filterType(i)">
+          <text class="tab-label">{{ tab }}</text>
+        </view>
+      </view>
+    </view>
+
     <view class="list-container">
-      <view
-        v-for="item in accounts"
-        :key="item.id"
-        class="account-card card"
-        @tap="goEdit(item)"
-      >
-        <view class="card-header flex-between">
-          <text class="card-category">{{ item.category || '未分类' }}</text>
-          <text class="card-amount" :class="amountClass(item)">
-            {{ amountPrefix(item) }} ¥{{ item.amount }}
-          </text>
+      <view v-for="item in accounts" :key="item.id" class="account-card card" @tap="goDetail(item)">
+        <view class="card-left flex-center">
+          <view class="category-icon" :class="typeClass(item)">
+            <text class="category-icon-text">{{ getCategoryIcon(item) }}</text>
+          </view>
         </view>
-        <view class="card-body flex-between">
-          <text class="card-remark text-secondary">{{ item.remark || '-' }}</text>
-          <text class="card-date text-secondary">{{ item.date }}</text>
+        <view class="card-center flex-between" style="flex:1;padding-left:20rpx;">
+          <view class="card-info">
+            <view class="flex-between" style="width:100%">
+              <text class="card-category">{{ getCategoryName(item) }}</text>
+              <text class="card-amount" :class="typeClass(item)">{{ amountText(item) }}</text>
+            </view>
+            <text class="card-remark" v-if="item.remark">{{ item.remark }}</text>
+            <text class="card-extra" v-if="item.fromAccount || item.toAccount">
+              {{ item.fromAccount || '' }} ⇄ {{ item.toAccount || '' }}
+            </text>
+          </view>
         </view>
-        <view class="card-footer flex-between" v-if="item.fromAccount || item.toAccount">
-          <text class="card-account text-secondary">{{ item.fromAccount || '' }}</text>
-          <text class="card-account text-secondary">{{ item.toAccount || '' }}</text>
-        </view>
+        <text class="card-date">{{ item.date }}</text>
       </view>
 
       <view class="empty-state" v-if="accounts.length === 0">
-        <text class="empty-icon">&#x1f4e2;</text>
+        <text class="empty-icon">◉</text>
         <text class="empty-text">暂无账目记录</text>
+        <text class="empty-hint">点击下方按钮开始记账吧</text>
       </view>
     </view>
 
-    <!-- 添加按钮 -->
-    <view class="fab-btn" @tap="goAdd">+</view>
+    <view class="fab-btn" @tap="goAdd">
+      <text class="fab-icon">+</text>
+    </view>
   </view>
 </template>
 
@@ -76,6 +70,7 @@ import { ref, computed, onMounted } from 'vue'
 import { onShow } from '@dcloudio/uni-app'
 import { request } from '../../utils/request'
 import dayjs from 'dayjs'
+import MonthPicker from '@/components/MonthPicker.vue'
 
 const accounts = ref([])
 const currentMonth = ref(dayjs().format('YYYY-MM'))
@@ -86,51 +81,61 @@ const monthIncome = ref('0.00')
 const monthExpense = ref('0.00')
 const balance = ref('0.00')
 
-function amountClass(item) {
-  if (item.type === 1) return 'text-success'
-  if (item.type === 2) return 'text-danger'
-  return 'text-info'
+function getCategoryName(item) {
+  if (item.type === 3) return '转账'
+  return item.category || '未分类'
 }
 
-function amountPrefix(item) {
-  if (item.type === 1) return '+'
-  if (item.type === 2) return '-'
+function getCategoryIcon(item) {
+  if (item.type === 1) return '▲'
+  if (item.type === 2) return '▼'
   return '⇄'
 }
+
+function typeClass(item) {
+  if (item.type === 1) return 'type-income'
+  if (item.type === 2) return 'type-expense'
+  return 'type-transfer'
+}
+
+function amountText(item) {
+  if (item.type === 1) return '+ ' + item.amount
+  if (item.type === 2) return '- ' + item.amount
+  return item.amount
+}
+
+const balanceClass = computed(() => {
+  const b = parseFloat(balance.value)
+  if (b > 0) return 'text-success'
+  if (b < 0) return 'text-danger'
+  return ''
+})
 
 async function loadAccounts() {
   const userId = uni.getStorageSync('userId')
   if (!userId) return
-
   try {
     const params = { month: currentMonth.value }
     if (activeType.value > 0) params.type = activeType.value
-
     const res = await request('/account/list', 'GET', params)
     const list = res.data || []
-
     let inc = 0, exp = 0
     list.forEach(a => {
       if (a.type === 1) inc += parseFloat(a.amount)
       if (a.type === 2) exp += parseFloat(a.amount)
     })
-
     monthIncome.value = inc.toFixed(2)
     monthExpense.value = exp.toFixed(2)
     balance.value = (inc - exp).toFixed(2)
     accounts.value = list
   } catch (err) {
     console.error('加载失败', err)
+    uni.showToast({ title: '加载失败', icon: 'none' })
   }
 }
 
-function changeMonth(dir) {
-  const now = dayjs(currentMonth.value)
-  if (dir === 'prev') {
-    currentMonth.value = now.subtract(1, 'month').format('YYYY-MM')
-  } else {
-    currentMonth.value = now.add(1, 'month').format('YYYY-MM')
-  }
+function onMonthChange(month) {
+  currentMonth.value = month
   loadAccounts()
 }
 
@@ -139,7 +144,7 @@ function filterType(index) {
   loadAccounts()
 }
 
-function goEdit(item) {
+function goDetail(item) {
   uni.navigateTo({ url: '/pages/detail/index?id=' + item.id })
 }
 
@@ -147,149 +152,89 @@ function goAdd() {
   uni.navigateTo({ url: '/pages/add/index' })
 }
 
-onMounted(() => {
-  loadAccounts()
-})
-
-onShow(() => {
-  loadAccounts()
-})
+onMounted(() => { loadAccounts() })
+onShow(() => { loadAccounts() })
 </script>
 
 <style scoped>
-.container {
-  padding: 20rpx;
-  padding-bottom: 140rpx;
-  min-height: 100vh;
+.container { padding: 0; padding-bottom: 160rpx; min-height: 100vh; background: #F8FAFC; }
+.header-card {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  border-radius: 0 0 32rpx 32rpx;
+  padding: 36rpx 32rpx 32rpx;
+  margin-bottom: 0;
+  box-shadow: 0 8rpx 32rpx rgba(99, 102, 241, 0.25);
 }
-
-.month-bar {
+.header-top {
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 20rpx;
+  margin-bottom: 28rpx;
 }
-
-.nav-arrow {
-  font-size: 32rpx;
-  color: #1890ff;
-  padding: 0 20rpx;
+.summary-grid {
+  display: flex; align-items: center;
+  background: rgba(255,255,255,0.15);
+  border-radius: 20rpx; padding: 24rpx 0;
+  backdrop-filter: blur(8rpx);
 }
-
-.month-text {
-  font-size: 34rpx;
-  font-weight: bold;
-  color: #333;
+.summary-item { flex: 1; display: flex; flex-direction: column; align-items: center; }
+.summary-label { font-size: 22rpx; color: rgba(255,255,255,0.75); margin-bottom: 8rpx; }
+.summary-value { font-size: 36rpx; font-weight: 700; color: #fff; }
+.summary-value.income { color: #86EFAC; }
+.summary-value.expense { color: #FCA5A5; }
+.summary-divider { width: 1rpx; height: 60rpx; background: rgba(255,255,255,0.15); }
+.tabs-card { margin-top: 24rpx; padding: 12rpx 16rpx; }
+.tabs-list { display: flex; gap: 12rpx; }
+.tab-item {
+  flex: 1; text-align: center;
+  padding: 14rpx 0; border-radius: 12rpx;
+  background: #F1F5F9;
+  font-size: 26rpx; color: #64748B;
+  transition: all 0.2s;
 }
-
-.summary-bar {
-  display: flex;
-  justify-content: space-around;
-  padding: 30rpx 20rpx;
+.tab-item.active {
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  color: #fff; font-weight: 600;
+  box-shadow: 0 4rpx 12rpx rgba(99, 102, 241, 0.3);
 }
-
-.summary-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.summary-label {
-  font-size: 24rpx;
-  color: #999;
-  margin-bottom: 8rpx;
-}
-
-.summary-value {
-  font-size: 36rpx;
-  font-weight: bold;
-}
-
-.filter-bar {
-  display: flex;
-  padding: 10rpx 0;
-}
-
-.filter-item {
-  flex: 1;
-  text-align: center;
-  font-size: 26rpx;
-  color: #666;
-  padding: 12rpx 0;
-}
-
-.filter-item.active {
-  color: #1890ff;
-  font-weight: bold;
-  border-bottom: 4rpx solid #1890ff;
-}
-
+.list-container { padding: 24rpx 24rpx 0; }
 .account-card {
-  margin-bottom: 16rpx;
+  display: flex; align-items: center;
+  padding: 24rpx; margin-bottom: 16rpx;
+  transition: transform 0.15s;
 }
-
-.card-category {
-  font-size: 30rpx;
-  font-weight: bold;
-  color: #333;
+.account-card:active { transform: scale(0.98); }
+.category-icon {
+  width: 72rpx; height: 72rpx;
+  border-radius: 20rpx;
+  display: flex; align-items: center; justify-content: center;
 }
-
-.card-amount {
-  font-size: 32rpx;
-  font-weight: bold;
-}
-
-.card-amount.text-success {
-  color: #52c41a;
-}
-
-.card-amount.text-danger {
-  color: #ff4d4f;
-}
-
-.card-amount.text-info {
-  color: #1890ff;
-}
-
-.card-remark, .card-date {
-  font-size: 24rpx;
-}
-
-.card-account {
-  font-size: 22rpx;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100rpx 0;
-}
-
-.empty-icon {
-  font-size: 80rpx;
-  margin-bottom: 20rpx;
-}
-
-.empty-text {
-  font-size: 28rpx;
-  color: #999;
-}
-
+.category-icon.type-income { background: #ECFDF5; }
+.category-icon.type-expense { background: #FEF2F2; }
+.category-icon.type-transfer { background: #EFF6FF; }
+.category-icon-text { font-size: 32rpx; font-weight: bold; }
+.category-icon.type-income .category-icon-text { color: #10B981; }
+.category-icon.type-expense .category-icon-text { color: #EF4444; }
+.category-icon.type-transfer .category-icon-text { color: #3B82F6; }
+.card-category { font-size: 28rpx; font-weight: 600; color: #1E293B; }
+.card-remark { font-size: 24rpx; color: #94A3B8; margin-top: 6rpx; }
+.card-extra { font-size: 22rpx; color: #CBD5E1; margin-top: 4rpx; }
+.card-amount { font-size: 32rpx; font-weight: 700; }
+.card-amount.type-income { color: #10B981; }
+.card-amount.type-expense { color: #EF4444; }
+.card-amount.type-transfer { color: #3B82F6; }
+.card-date { font-size: 22rpx; color: #94A3B8; white-space: nowrap; margin-left: 16rpx; }
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 120rpx 0; }
+.empty-icon { font-size: 80rpx; color: #CBD5E1; margin-bottom: 24rpx; }
+.empty-text { font-size: 28rpx; color: #94A3B8; margin-bottom: 8rpx; }
+.empty-hint { font-size: 24rpx; color: #CBD5E1; }
 .fab-btn {
-  position: fixed;
-  right: 40rpx;
-  bottom: 80rpx;
-  width: 100rpx;
-  height: 100rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-size: 56rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8rpx 24rpx rgba(102, 126, 234, 0.4);
-  z-index: 100;
+  position: fixed; right: 40rpx; bottom: 100rpx;
+  width: 108rpx; height: 108rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  box-shadow: 0 8rpx 28rpx rgba(99, 102, 241, 0.4);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; transition: transform 0.2s;
 }
+.fab-btn:active { transform: scale(0.9); }
+.fab-icon { font-size: 56rpx; color: #fff; font-weight: 300; line-height: 1; }
 </style>

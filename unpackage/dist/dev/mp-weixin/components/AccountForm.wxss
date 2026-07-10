@@ -1,0 +1,63 @@
+.account-form.data-v-aa7ba406 { padding-bottom: 20rpx;
+}
+.type-selector.data-v-aa7ba406 { display: flex; justify-content: space-around; padding: 28rpx 20rpx; margin-bottom: 16rpx;
+}
+.type-item.data-v-aa7ba406 { display: flex; flex-direction: column; align-items: center; padding: 12rpx 16rpx; border-radius: 16rpx; min-width: 80rpx;
+}
+.type-icon-wrap.data-v-aa7ba406 { width: 88rpx; height: 88rpx; border-radius: 28rpx; display: flex; align-items: center; justify-content: center; background: #F1F5F9; margin-bottom: 12rpx; transition: all 0.2s;
+}
+.type-icon.data-v-aa7ba406 { font-size: 40rpx; font-weight: bold; color: #94A3B8;
+}
+.type-label.data-v-aa7ba406 { font-size: 24rpx; color: #64748B; font-weight: 500;
+}
+.type-item.active .type-icon-wrap.data-v-aa7ba406 { box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.1);
+}
+.type-item.active .income .type-icon-wrap.data-v-aa7ba406 { background: linear-gradient(135deg, #10B981, #059669);
+}
+.type-item.active .expense .type-icon-wrap.data-v-aa7ba406 { background: linear-gradient(135deg, #EF4444, #DC2626);
+}
+.type-item.active .transfer .type-icon-wrap.data-v-aa7ba406 { background: linear-gradient(135deg, #3B82F6, #2563EB);
+}
+.type-item.active .type-icon.data-v-aa7ba406 { color: #fff;
+}
+.type-item.active .type-label.data-v-aa7ba406 { color: #1E293B; font-weight: 600;
+}
+.amount-section.data-v-aa7ba406 { display: flex; align-items: center; justify-content: center; margin-bottom: 16rpx; min-height: 120rpx;
+}
+.amount-symbol.data-v-aa7ba406 { font-size: 36rpx; font-weight: 700; color: #1E293B; margin-right: 12rpx;
+}
+.amount-input.data-v-aa7ba406 { font-size: 80rpx; font-weight: 700; color: #1E293B; text-align: center; flex: 1; min-height: 100rpx;}
+.amount-placeholder.data-v-aa7ba406 { color: #CBD5E1; font-size: 80rpx; font-weight: 700;
+}
+.form-row.data-v-aa7ba406 { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 28rpx; margin-bottom: 16rpx;
+}
+.form-row-left.data-v-aa7ba406 { display: flex; align-items: center; flex-shrink: 0;
+}
+.form-icon.data-v-aa7ba406 { font-size: 32rpx; margin-right: 16rpx; color: #94A3B8;
+}
+.form-label.data-v-aa7ba406 { font-size: 28rpx; color: #64748B; font-weight: 500; margin-right: 20rpx; white-space: nowrap;
+}
+.picker-value.data-v-aa7ba406 { font-size: 28rpx; color: #1E293B;
+}
+.form-row-inner.data-v-aa7ba406 { padding: 0 28rpx; margin-bottom: 16rpx;
+}
+.form-input.data-v-aa7ba406 { font-size: 28rpx; color: #1E293B; padding: 16rpx 0; border-bottom: 1rpx solid #E2E8F0; flex: 1;
+}
+
+/* 备注行：label 在上，输入框在下 */
+.remark-row.data-v-aa7ba406 {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16rpx;
+  padding: 24rpx 28rpx;
+}
+.remark-row .form-row-left.data-v-aa7ba406 {
+  margin-bottom: 4rpx;
+}
+.remark-input.data-v-aa7ba406 {
+  font-size: 28rpx;
+  color: #1E293B;
+  width: 100%;
+  padding: 16rpx 0;
+  min-height: 120rpx;
+}
