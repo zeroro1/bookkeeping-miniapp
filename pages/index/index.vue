@@ -161,7 +161,7 @@ onShow(() => { loadAccounts() })
 .header-card {
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
   border-radius: 0 0 32rpx 32rpx;
-  padding: 120rpx 32rpx 32rpx;
+  padding: 160rpx 32rpx 32rpx;
   margin-bottom: 0;
   box-shadow: 0 8rpx 32rpx rgba(99, 102, 241, 0.25);
 }
