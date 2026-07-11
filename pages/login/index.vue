@@ -15,8 +15,7 @@
       </view>
       <view class="login-card card">
         <button class="login-btn" :loading="logging" @tap="handleLogin">
-          <text class="login-btn-icon">微</text>
-          <text>微信一键登录</text>
+          <text class="login-btn-text">微信登录</text>
         </button>
       </view>
       <text class="footer-text">登录后自动同步您的账目数据</text>
@@ -81,9 +80,9 @@ async function handleLogin() {
   border: none;
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
   box-shadow: 0 8rpx 24rpx rgba(99, 102, 241, 0.35);
-  display: flex; align-items: center; justify-content: center; gap: 12rpx;
+  display: flex; align-items: center; justify-content: center;
 }
 .login-btn::after { border: none; }
-.login-btn-icon { font-size: 32rpx; }
+.login-btn-text { font-size: 32rpx; }
 .footer-text { text-align: center; font-size: 24rpx; color: rgba(255, 255, 255, 0.6); margin-top: auto; padding-bottom: 60rpx; }
 </style>
