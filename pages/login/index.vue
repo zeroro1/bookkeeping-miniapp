@@ -8,43 +8,37 @@
     <view class="content-wrapper">
       <view class="logo-section">
         <view class="logo-badge">
-          <text class="logo-icon">￥</text>
+          <text class="logo-icon">账</text>
         </view>
         <text class="app-title">记账本</text>
         <text class="app-subtitle">轻松记录每一笔收支</text>
       </view>
       <view class="login-card card">
         <button class="login-btn" :loading="logging" @tap="handleLogin">
-          <text class="login-btn-icon">锁</text>
+          <text class="login-btn-icon">微</text>
           <text>微信一键登录</text>
         </button>
-        <view class="divider">
-          <view class="divider-line"></view>
-          <text class="divider-text">或</text>
-          <view class="divider-line"></view>
-        </view>
-        <button class="test-btn" :loading="logging" @tap="handleTestLogin">
-          <text>使用测试账号</text>
-        </button>
       </view>
-      <text class="footer-text">已登录用户自动同步数据</text>
+      <text class="footer-text">登录后自动同步您的账目数据</text>
     </view>
   </view>
 </template>
+
 <script setup>
 import { request } from '../../utils/request'
 import { ref } from 'vue'
 const logging = ref(false)
+
 async function handleLogin() {
   logging.value = true
   try {
     const loginRes = await new Promise((resolve, reject) => {
       uni.login({ provider: 'weixin', success: resolve, fail: reject })
     })
-    await request('/auth/login', 'POST', { code: loginRes.code })
-    uni.setStorageSync('token', loginRes.data.token)
-    uni.setStorageSync('userId', loginRes.data.userId)
-    uni.setStorageSync('openid', loginRes.data.openid)
+    const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
+    uni.setStorageSync('token', authRes.data.token)
+    uni.setStorageSync('userId', authRes.data.userId)
+    uni.setStorageSync('openid', authRes.data.openid)
     uni.reLaunch({ url: '/pages/index/index' })
   } catch (err) {
     console.error('登录失败', err)
@@ -53,22 +47,8 @@ async function handleLogin() {
     logging.value = false
   }
 }
-async function handleTestLogin() {
-  logging.value = true
-  try {
-    const res = await request('/auth/test-login', 'GET')
-    uni.setStorageSync('token', res.data.token)
-    uni.setStorageSync('userId', res.data.userId)
-    uni.setStorageSync('openid', res.data.openid)
-    uni.reLaunch({ url: '/pages/index/index' })
-  } catch (err) {
-    console.error('测试登录失败', err)
-    uni.showToast({ title: '登录失败，请重试', icon: 'none' })
-  } finally {
-    logging.value = false
-  }
-}
 </script>
+
 <style scoped>
 .container {
   min-height: 100vh;
@@ -105,13 +85,5 @@ async function handleTestLogin() {
 }
 .login-btn::after { border: none; }
 .login-btn-icon { font-size: 32rpx; }
-.divider { display: flex; align-items: center; margin: 36rpx 0; }
-.divider-line { flex: 1; height: 1rpx; background: #E2E8F0; }
-.divider-text { font-size: 24rpx; color: #94A3B8; padding: 0 20rpx; }
-.test-btn {
-  width: 100%; height: 88rpx; border-radius: 44rpx;
-  font-size: 28rpx; font-weight: 500; color: #64748B;
-  background: transparent; border: 2rpx solid #E2E8F0;
-}
 .footer-text { text-align: center; font-size: 24rpx; color: rgba(255, 255, 255, 0.6); margin-top: auto; padding-bottom: 60rpx; }
 </style>

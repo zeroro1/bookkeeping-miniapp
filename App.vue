@@ -6,17 +6,34 @@
   </div>
 </template>
 
-<script>
-export default {
-  onLaunch() {
-    console.log('App Launch')
-    const token = uni.getStorageSync('token')
-    const userId = uni.getStorageSync('userId')
-    if (!token || !userId) {
+<script setup>
+import { onLaunch } from '@dcloudio/uni-app'
+import { request } from './utils/request'
+
+onLaunch(async () => {
+  const token = uni.getStorageSync('token')
+  const userId = uni.getStorageSync('userId')
+  
+  if (token && userId) {
+    // 有缓存 token，尝试静默登录
+    try {
+      const loginRes = await new Promise((resolve, reject) => {
+        uni.login({ provider: 'weixin', success: resolve, fail: reject })
+      })
+      await request('/auth/login', 'POST', { code: loginRes.code })
+      // 静默登录成功，保留在首页
+    } catch (err) {
+      // token 失效，跳转登录页
+      uni.removeStorageSync('token')
+      uni.removeStorageSync('userId')
+      uni.removeStorageSync('openid')
       uni.reLaunch({ url: '/pages/login/index' })
     }
+  } else {
+    // 无缓存，跳转登录页
+    uni.reLaunch({ url: '/pages/login/index' })
   }
-}
+})
 </script>
 
 <style>
