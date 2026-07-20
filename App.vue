@@ -11,26 +11,16 @@ import { onLaunch } from '@dcloudio/uni-app'
 import { request } from './utils/request'
 
 onLaunch(async () => {
-  const token = uni.getStorageSync('token')
-  const userId = uni.getStorageSync('userId')
-  
-  if (token && userId) {
-    try {
-      const loginRes = await new Promise((resolve, reject) => {
-        uni.login({ provider: 'weixin', success: resolve, fail: reject })
-      })
-      const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
-      uni.setStorageSync('token', authRes.data.token)
-      uni.setStorageSync('userId', authRes.data.userId)
-      uni.setStorageSync('openid', authRes.data.openid)
-      uni.reLaunch({ url: '/pages/index/index' })
-    } catch (err) {
-      uni.removeStorageSync('token')
-      uni.removeStorageSync('userId')
-      uni.removeStorageSync('openid')
-      uni.reLaunch({ url: '/pages/login/index' })
-    }
-  } else {
+  try {
+    const loginRes = await new Promise((resolve, reject) => {
+      uni.login({ provider: 'weixin', success: resolve, fail: reject })
+    })
+    const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
+    uni.setStorageSync('token', authRes.data.token)
+    uni.setStorageSync('userId', authRes.data.userId)
+    uni.setStorageSync('openid', authRes.data.openid)
+    uni.reLaunch({ url: '/pages/index/index' })
+  } catch (err) {
     uni.reLaunch({ url: '/pages/login/index' })
   }
 })
