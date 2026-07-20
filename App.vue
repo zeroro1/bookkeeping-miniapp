@@ -19,7 +19,10 @@ onLaunch(async () => {
       const loginRes = await new Promise((resolve, reject) => {
         uni.login({ provider: 'weixin', success: resolve, fail: reject })
       })
-      await request('/auth/login', 'POST', { code: loginRes.code })
+      const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
+      uni.setStorageSync('token', authRes.data.token)
+      uni.setStorageSync('userId', authRes.data.userId)
+      uni.setStorageSync('openid', authRes.data.openid)
       uni.reLaunch({ url: '/pages/index/index' })
     } catch (err) {
       uni.removeStorageSync('token')
@@ -48,7 +51,6 @@ page {
   min-height: 100vh;
 }
 
-/* ===== Design Tokens ===== */
 :root {
   --primary: #6366F1;
   --primary-light: #818CF8;
@@ -69,19 +71,8 @@ page {
   --radius-sm: 16rpx;
 }
 
-/* ===== Utility Classes ===== */
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
 .text-success { color: var(--success); }
 .text-danger { color: var(--danger); }
 .text-info { color: var(--info); }
@@ -90,7 +81,6 @@ page {
 .text-secondary { color: var(--text-secondary); }
 .text-primary { color: var(--text-primary); }
 
-/* ===== Card Component ===== */
 .card {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -99,7 +89,6 @@ page {
   box-shadow: var(--shadow);
 }
 
-/* ===== Button Components ===== */
 .btn {
   display: flex;
   align-items: center;
@@ -133,7 +122,5 @@ page {
   color: var(--text-secondary);
 }
 
-.btn-block {
-  width: 100%;
-}
+.btn-block { width: 100%; }
 </style>
