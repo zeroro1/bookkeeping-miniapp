@@ -15,7 +15,7 @@
     <view class="form-row card">
       <view class="form-row-left">
         <text class="form-icon">&#9776;</text>
-        <text class="form-label">閺冦儲婀?/text>
+        <text class="form-label">日期</text>
       </view>
       <picker mode="date" :value="formData.date" @change="onDateChange">
         <view class="picker-value">{{ formData.date || '' }}</view>
@@ -24,28 +24,28 @@
     <view class="form-row card" v-if="showCategory">
       <view class="form-row-left">
         <text class="form-icon">&#9776;</text>
-        <text class="form-label">閸掑棛琚?/text>
+        <text class="form-label">分类</text>
       </view>
       <picker mode="selector" :range="categories" :value="categoryIndex" @change="onCategoryChange">
-        <view class="picker-value">{{ categories[categoryIndex] || '鐠囩兘鈧瀚? }}</view>
+        <view class="picker-value">{{ categories[categoryIndex] || '请选择' }}</view>
       </picker>
     </view>
     <view class="card" v-if="formData.type === 3">
       <view class="form-row-inner">
-        <text class="form-label">鏉烆剙鍤拹锔藉煕</text>
-        <input class="form-input" placeholder="婵″偊绱板顔讳繆" :value="formData.fromAccount" @input="onFromAccountInput" />
+        <text class="form-label">转出账户</text>
+        <input class="form-input" placeholder="如：微信" :value="formData.fromAccount" @input="onFromAccountInput" />
       </view>
       <view class="form-row-inner" style="margin-top:28rpx;">
-        <text class="form-label">鏉烆剙鍙嗙拹锔藉煕</text>
-        <input class="form-input" placeholder="婵″偊绱伴弨顖欑帛鐎? :value="formData.toAccount" @input="onToAccountInput" />
+        <text class="form-label">转入账户</text>
+        <input class="form-input" placeholder="如：支付宝" :value="formData.toAccount" @input="onToAccountInput" />
       </view>
     </view>
     <view class="form-row remark-row card">
       <view class="form-row-left">
         <text class="form-icon">&#9998;</text>
-        <text class="form-label">婢跺洦鏁?/text>
+        <text class="form-label">备注</text>
       </view>
-      <textarea class="remark-input" placeholder="濞ｈ濮炴径鍥ㄦ暈..." :value="formData.remark" @input="onRemarkInput" maxlength="200" :auto-height="false" style="height:120rpx;" />
+      <textarea class="remark-input" placeholder="添加备注..." :value="formData.remark" @input="onRemarkInput" maxlength="200" :auto-height="false" style="height:120rpx;" />
     </view>
   </view>
 </template>
@@ -58,9 +58,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['selectType', 'amountInput', 'dateChange', 'categoryChange', 'fromAccountInput', 'toAccountInput', 'remarkInput'])
 const typeOptions = [
-  { value: 1, label: '閺€璺哄弳', icon: '\u25B2', cls: 'income' },
-  { value: 2, label: '閺€顖氬毉', icon: '\u25BC', cls: 'expense' },
-  { value: 3, label: '鏉烆剝澶?, icon: '\u21C4', cls: 'transfer' }
+  { value: 1, label: '收入', icon: '\u25B2', cls: 'income' },
+  { value: 2, label: '支出', icon: '\u25BC', cls: 'expense' },
+  { value: 3, label: '转账', icon: '\u21C4', cls: 'transfer' }
 ]
 function selectType(type) { emit('selectType', type) }
 function onAmountInput(e) { emit('amountInput', e) }
@@ -95,7 +95,7 @@ function onRemarkInput(e) { emit('remarkInput', e) }
 .form-row-inner { padding: 0 28rpx; margin-bottom: 16rpx; }
 .form-input { font-size: 28rpx; color: #1E293B; padding: 16rpx 0; border-bottom: 1rpx solid #E2E8F0; flex: 1; }
 
-/* 婢跺洦鏁炵悰宀嬬窗label 閸︺劋绗傞敍宀冪翻閸忋儲顢嬮崷銊ょ瑓 */
+/* 备注行：label 在上，输入框在下 */
 .remark-row {
   flex-direction: column;
   align-items: stretch;
