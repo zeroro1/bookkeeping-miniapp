@@ -88,7 +88,7 @@ function onRemarkInput(e) { emit('remarkInput', e) }
 .amount-input { font-size: 80rpx; font-weight: 700; color: #1E293B; text-align: center; flex: 1; min-height: 100rpx;}
 .amount-placeholder { color: #CBD5E1; font-size: 80rpx; font-weight: 700; }
 .form-row { display: flex; align-items: center; justify-content: space-between; padding: 24rpx 28rpx; margin-bottom: 16rpx; }
-.form-row-left { display: flex; align-items: center; flex-shrink: 0; }
+.form-row-left { display: flex; align-items: center; flex-shrink: 0; width: 140rpx; }
 .form-icon { font-size: 32rpx; margin-right: 16rpx; color: #94A3B8; }
 .form-label { font-size: 28rpx; color: #64748B; font-weight: 500; margin-right: 20rpx; white-space: nowrap; }
 .picker-value { font-size: 28rpx; color: #1E293B; }
