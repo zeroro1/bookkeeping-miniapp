@@ -8,14 +8,18 @@ const BASE_URL = 'https://www.jizhangben.me/api'
 export function request(url, method = 'GET', data = {}, needAuth = true) {
   return new Promise((resolve, reject) => {
     const token = needAuth ? uni.getStorageSync('token') : ''
+    const header = {
+      'Content-Type': 'application/json'
+    }
+    if (token) {
+      header['Authorization'] = 'Bearer ' + token
+    }
+
     uni.request({
       url: BASE_URL + url,
       method: method,
       data: data,
-      header: {
-        'Content-Type': 'application/json',
-        'Authorization': token ? 'Bearer ' + token : ''
-      },
+      header: header,
       success(res) {
         if (res.statusCode === 200) {
           if (res.data && res.data.code === 200) {
@@ -25,6 +29,10 @@ export function request(url, method = 'GET', data = {}, needAuth = true) {
             reject(res.data)
           }
         } else if (res.statusCode === 401) {
+          // 清除本地 token
+          uni.removeStorageSync('token')
+          uni.removeStorageSync('userId')
+          uni.removeStorageSync('openid')
           reject({ code: 401, message: '未登录' })
         } else {
           uni.showToast({ title: '请求失败', icon: 'none' })

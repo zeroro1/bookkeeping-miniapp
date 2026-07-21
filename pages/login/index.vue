@@ -17,8 +17,9 @@
         <button class="login-btn" :loading="logging" @tap="handleLogin">
           <text class="login-btn-text">微信登录</text>
         </button>
+        <text class="login-hint">登录后即可保存和管理您的账目</text>
       </view>
-      <text class="footer-text">登录后自动同步您的账目数据</text>
+      <text class="footer-text">登录信息仅用于识别您的身份</text>
     </view>
   </view>
 </template>
@@ -38,12 +39,60 @@ async function handleLogin() {
     uni.setStorageSync('token', authRes.data.token)
     uni.setStorageSync('userId', authRes.data.userId)
     uni.setStorageSync('openid', authRes.data.openid)
-    uni.reLaunch({ url: '/pages/index/index' })
+
+    // 登录后处理待提交的操作
+    await retryPendingAction()
+
+    // 返回上一页或首页
+    const pages = getCurrentPages()
+    if (pages.length > 1) {
+      uni.navigateBack()
+    } else {
+      uni.switchTab({ url: '/pages/index/index' })
+    }
   } catch (err) {
     console.error('登录失败', err)
     uni.showToast({ title: '登录失败，请重试', icon: 'none' })
   } finally {
     logging.value = false
+  }
+}
+
+async function retryPendingAction() {
+  try {
+    // 尝试恢复待提交的账目数据
+    const pendingStr = uni.getStorageSync('pendingAccount')
+    if (pendingStr) {
+      const pendingData = JSON.parse(pendingStr)
+      uni.removeStorageSync('pendingAccount')
+
+      // 判断是新增还是编辑
+      const isEdit = pendingData.type !== null && pendingData.amount
+      if (isEdit) {
+        // 编辑模式：尝试重新保存
+        const data = {
+          type: pendingData.type,
+          amount: parseFloat(pendingData.amount),
+          date: pendingData.date,
+          category: pendingData.category,
+          fromAccount: pendingData.fromAccount || '',
+          toAccount: pendingData.toAccount || '',
+          remark: pendingData.remark || ''
+        }
+        await request('/account', 'POST', data)
+        uni.showToast({ title: '添加成功', icon: 'success' })
+      }
+    }
+
+    // 尝试恢复待删除的账目
+    const pendingDeleteId = uni.getStorageSync('pendingDelete')
+    if (pendingDeleteId) {
+      uni.removeStorageSync('pendingDelete')
+      await request('/account/' + pendingDeleteId, 'DELETE')
+      uni.showToast({ title: '删除成功', icon: 'success' })
+    }
+  } catch (err) {
+    console.error('重试 pending 操作失败', err)
   }
 }
 </script>
@@ -73,7 +122,16 @@ async function handleLogin() {
 .logo-icon { font-size: 80rpx; color: #fff; font-weight: bold; }
 .app-title { font-size: 56rpx; font-weight: 700; color: #FFFFFF; margin-bottom: 12rpx; letter-spacing: 4rpx; }
 .app-subtitle { font-size: 28rpx; color: rgba(255, 255, 255, 0.8); }
-.login-card { background: #FFFFFF; border-radius: 32rpx; padding: 48rpx 40rpx; box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15); margin-bottom: 32rpx; }
+.login-card {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 48rpx 40rpx;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.15);
+  margin-bottom: 32rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .login-btn {
   width: 100%; height: 96rpx; border-radius: 48rpx;
   font-size: 32rpx; font-weight: 600; color: #fff;
@@ -84,5 +142,6 @@ async function handleLogin() {
 }
 .login-btn::after { border: none; }
 .login-btn-text { font-size: 32rpx; }
+.login-hint { font-size: 24rpx; color: #64748B; margin-top: 20rpx; }
 .footer-text { text-align: center; font-size: 24rpx; color: rgba(255, 255, 255, 0.6); margin-top: auto; padding-bottom: 60rpx; }
 </style>

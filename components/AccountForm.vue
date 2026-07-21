@@ -9,43 +9,43 @@
       </view>
     </view>
     <view class="amount-section card">
-      <text class="amount-symbol">¥</text>
+      <text class="amount-symbol">楼</text>
       <input class="amount-input" type="digit" placeholder="0.00" :value="formData.amount" @input="onAmountInput" placeholder-class="amount-placeholder" />
     </view>
     <view class="form-row card">
       <view class="form-row-left">
-        <text class="form-icon">◈</text>
-        <text class="form-label">日期</text>
+        <text class="form-icon">鈼?/text>
+        <text class="form-label">鏃ユ湡</text>
       </view>
       <picker mode="date" :value="formData.date" @change="onDateChange">
-        <view class="picker-value">{{ formData.date || '选择日期' }}</view>
+        <view class="picker-value">{{ formData.date || '閫夋嫨鏃ユ湡' }}</view>
       </picker>
     </view>
     <view class="form-row card" v-if="showCategory">
       <view class="form-row-left">
-        <text class="form-icon">◈</text>
-        <text class="form-label">分类</text>
+        <text class="form-icon">鈼?/text>
+        <text class="form-label">鍒嗙被</text>
       </view>
       <picker mode="selector" :range="categories" :value="categoryIndex" @change="onCategoryChange">
-        <view class="picker-value">{{ formData.category || '选择分类' }}</view>
+        <view class="picker-value">{{ formData.category || '閫夋嫨鍒嗙被' }}</view>
       </picker>
     </view>
     <view class="card" v-if="formData.type === 3">
       <view class="form-row-inner">
-        <text class="form-label">转出账户</text>
-        <input class="form-input" placeholder="如：微信" :value="formData.fromAccount" @input="onFromAccountInput" />
+        <text class="form-label">杞嚭璐︽埛</text>
+        <input class="form-input" placeholder="濡傦細寰俊" :value="formData.fromAccount" @input="onFromAccountInput" />
       </view>
       <view class="form-row-inner" style="margin-top:28rpx;">
-        <text class="form-label">转入账户</text>
-        <input class="form-input" placeholder="如：支付宝" :value="formData.toAccount" @input="onToAccountInput" />
+        <text class="form-label">杞叆璐︽埛</text>
+        <input class="form-input" placeholder="濡傦細鏀粯瀹? :value="formData.toAccount" @input="onToAccountInput" />
       </view>
     </view>
     <view class="form-row remark-row card">
       <view class="form-row-left">
-        <text class="form-icon">✎</text>
-        <text class="form-label">备注</text>
+        <text class="form-icon">鉁?/text>
+        <text class="form-label">澶囨敞</text>
       </view>
-      <textarea class="remark-input" placeholder="添加备注..." :value="formData.remark" @input="onRemarkInput" maxlength="200" :auto-height="false" style="height:120rpx;" />
+      <textarea class="remark-input" placeholder="娣诲姞澶囨敞..." :value="formData.remark" @input="onRemarkInput" maxlength="200" :auto-height="false" style="height:120rpx;" />
     </view>
   </view>
 </template>
@@ -58,9 +58,9 @@ const props = defineProps({
 })
 const emit = defineEmits(['selectType', 'amountInput', 'dateChange', 'categoryChange', 'fromAccountInput', 'toAccountInput', 'remarkInput'])
 const typeOptions = [
-  { value: 1, label: '收入', icon: '▲', cls: 'income' },
-  { value: 2, label: '支出', icon: '▼', cls: 'expense' },
-  { value: 3, label: '转账', icon: '⇄', cls: 'transfer' }
+  { value: 1, label: '鏀跺叆', icon: '鈻?, cls: 'income' },
+  { value: 2, label: '鏀嚭', icon: '鈻?, cls: 'expense' },
+  { value: 3, label: '杞处', icon: '鈬?, cls: 'transfer' }
 ]
 function selectType(type) { emit('selectType', type) }
 function onAmountInput(e) { emit('amountInput', e) }
@@ -95,7 +95,7 @@ function onRemarkInput(e) { emit('remarkInput', e) }
 .form-row-inner { padding: 0 28rpx; margin-bottom: 16rpx; }
 .form-input { font-size: 28rpx; color: #1E293B; padding: 16rpx 0; border-bottom: 1rpx solid #E2E8F0; flex: 1; }
 
-/* 备注行：label 在上，输入框在下 */
+/* 澶囨敞琛岋細label 鍦ㄤ笂锛岃緭鍏ユ鍦ㄤ笅 */
 .remark-row {
   flex-direction: column;
   align-items: stretch;

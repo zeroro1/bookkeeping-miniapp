@@ -49,41 +49,8 @@ function onFromAccountInput(e) { formData.fromAccount = e.detail.value }
 function onToAccountInput(e) { formData.toAccount = e.detail.value }
 function onRemarkInput(e) { formData.remark = e.detail.value }
 
-// 登录流程
-async function doLogin() {
-  return new Promise(async (resolve, reject) => {
-    try {
-      uni.showLoading({ title: '登录中...' })
-      const loginRes = await new Promise((res, rej) => {
-        uni.login({ provider: 'weixin', success: res, fail: rej })
-      })
-      const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
-      uni.setStorageSync('token', authRes.data.token)
-      uni.setStorageSync('userId', authRes.data.userId)
-      uni.setStorageSync('openid', authRes.data.openid)
-      uni.hideLoading()
-      resolve()
-    } catch (err) {
-      uni.hideLoading()
-      reject(err)
-    }
-  })
-}
-
-async function handleSubmit() {
-  if (!formData.type) return uni.showToast({ title: '请选择类型', icon: 'none' })
-  if (!formData.amount || parseFloat(formData.amount) <= 0) return uni.showToast({ title: '请输入有效金额', icon: 'none' })
-
-  const userId = uni.getStorageSync('userId')
-  if (!userId) {
-    // 未登录，先登录
-    try {
-      await doLogin()
-    } catch (err) {
-      return uni.showToast({ title: '登录失败，请重试', icon: 'none' })
-    }
-  }
-
+// 保存账目数据
+async function saveAccount() {
   const data = {
     type: formData.type,
     amount: parseFloat(formData.amount),
@@ -93,17 +60,32 @@ async function handleSubmit() {
     toAccount: formData.toAccount,
     remark: formData.remark
   }
+  return request('/account', 'POST', data)
+}
 
-  uni.showLoading({ title: '添加中...' })
+async function handleSubmit() {
+  if (!formData.type) return uni.showToast({ title: '请选择类型', icon: 'none' })
+  if (!formData.amount || parseFloat(formData.amount) <= 0) return uni.showToast({ title: '请输入有效金额', icon: 'none' })
+
+  const token = uni.getStorageSync('token')
+  if (!token) {
+    // 未登录，保存待提交数据，跳转到登录页
+    uni.setStorageSync('pendingAccount', JSON.stringify(formData))
+    uni.navigateTo({ url: '/pages/login/index' })
+    return
+  }
+
+  uni.showLoading({ title: '添加中..' })
   try {
-    await request('/account', 'POST', data)
+    await saveAccount()
     uni.hideLoading()
     uni.showToast({ title: '添加成功' })
-    // 延迟返回，让用户看到成功提示
+    // 清除待提交数据
+    uni.removeStorageSync('pendingAccount')
     setTimeout(() => uni.navigateBack(), 1500)
   } catch (err) {
     uni.hideLoading()
-    console.error('提交失败', err)
+    console.error('添加失败', err)
     uni.showToast({ title: '添加失败', icon: 'none' })
   }
 }

@@ -53,7 +53,7 @@
       </view>
 
       <view class="empty-state" v-if="accounts.length === 0">
-        <text class="empty-icon">◉</text>
+        <text class="empty-icon">◇</text>
         <text class="empty-text">暂无账目记录</text>
         <text class="empty-hint">点击下方按钮开始记账吧</text>
       </view>
@@ -61,6 +61,12 @@
 
     <view class="fab-btn" @tap="goAdd">
       <text class="fab-icon">+</text>
+    </view>
+
+    <!-- 登录状态提示 -->
+    <view class="login-hint-bar" v-if="!isLoggedIn">
+      <text class="login-hint-text">未登录，添加账目需先登录</text>
+      <text class="login-link" @tap="goLogin">去登录</text>
     </view>
   </view>
 </template>
@@ -76,6 +82,7 @@ const accounts = ref([])
 const currentMonth = ref(dayjs().format('YYYY-MM'))
 const activeType = ref(0)
 const tabs = ref(['全部', '收入', '支出', '转账'])
+const isLoggedIn = ref(false)
 
 const monthIncome = ref('0.00')
 const monthExpense = ref('0.00')
@@ -149,12 +156,18 @@ function goAdd() {
   uni.navigateTo({ url: '/pages/add/index' })
 }
 
-onMounted(() => { loadAccounts() })
-onShow(() => { loadAccounts() })
+function goLogin() {
+  uni.navigateTo({ url: '/pages/login/index' })
+}
+
+onShow(() => {
+  isLoggedIn.value = !!uni.getStorageSync('token')
+  loadAccounts()
+})
 </script>
 
 <style scoped>
-.container { padding: 0; padding-bottom: 160rpx; min-height: 100vh; background: #F8FAFC; }
+.container { padding: 0; padding-bottom: 240rpx; min-height: 100vh; background: #F8FAFC; }
 .header-card {
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
   border-radius: 0 0 32rpx 32rpx;
@@ -221,7 +234,7 @@ onShow(() => { loadAccounts() })
 .empty-text { font-size: 28rpx; color: #94A3B8; margin-bottom: 8rpx; }
 .empty-hint { font-size: 24rpx; color: #CBD5E1; }
 .fab-btn {
-  position: fixed; right: 40rpx; bottom: 100rpx;
+  position: fixed; right: 40rpx; bottom: 180rpx;
   width: 108rpx; height: 108rpx; border-radius: 50%;
   background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
   box-shadow: 0 8rpx 28rpx rgba(99, 102, 241, 0.4);
@@ -230,4 +243,21 @@ onShow(() => { loadAccounts() })
 }
 .fab-btn:active { transform: scale(0.9); }
 .fab-icon { font-size: 56rpx; color: #fff; font-weight: 300; line-height: 1; }
+.login-hint-bar {
+  position: fixed;
+  bottom: 100rpx;
+  left: 40rpx;
+  right: 180rpx;
+  background: #FFF7ED;
+  border: 1rpx solid #FED7AA;
+  border-radius: 16rpx;
+  padding: 16rpx 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 99;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06);
+}
+.login-hint-text { font-size: 24rpx; color: #C2410C; }
+.login-link { font-size: 24rpx; color: #6366F1; font-weight: 600; }
 </style>
