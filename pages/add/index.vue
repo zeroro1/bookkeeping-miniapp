@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="page-header">
-      <text class="page-title">添加明细</text>
+      <text class="page-title">娣诲姞鏄庣粏</text>
     </view>
     <AccountForm
       :formData="formData" :categories="categories" :categoryIndex="categoryIndex"
@@ -11,7 +11,7 @@
       @toAccountInput="onToAccountInput" @remarkInput="onRemarkInput"
     />
     <view class="bottom-bar">
-      <button class="submit-btn" @tap="handleSubmit">确认添加</button>
+      <button class="submit-btn" @tap="handleSubmit">纭娣诲姞</button>
     </view>
   </view>
 </template>
@@ -23,7 +23,7 @@ import { request } from '../../utils/request'
 import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../utils/constant'
 
 const formData = reactive({ type: null, amount: '', date: '', category: '', fromAccount: '', toAccount: '', remark: '' })
-const categories = ref([])
+const categories = ref(["请选择"])
 const categoryIndex = ref(-1)
 const showCategory = computed(() => formData.type !== 3)
 
@@ -49,7 +49,7 @@ function onFromAccountInput(e) { formData.fromAccount = e.detail.value }
 function onToAccountInput(e) { formData.toAccount = e.detail.value }
 function onRemarkInput(e) { formData.remark = e.detail.value }
 
-// 保存账目数据
+// 淇濆瓨璐︾洰鏁版嵁
 async function saveAccount() {
   const data = {
     type: formData.type,
@@ -64,29 +64,29 @@ async function saveAccount() {
 }
 
 async function handleSubmit() {
-  if (!formData.type) return uni.showToast({ title: '请选择类型', icon: 'none' })
-  if (!formData.amount || parseFloat(formData.amount) <= 0) return uni.showToast({ title: '请输入有效金额', icon: 'none' })
+  if (!formData.type) return uni.showToast({ title: '璇烽€夋嫨绫诲瀷', icon: 'none' })
+  if (!formData.amount || parseFloat(formData.amount) <= 0) return uni.showToast({ title: '璇疯緭鍏ユ湁鏁堥噾棰?, icon: 'none' })
 
   const token = uni.getStorageSync('token')
   if (!token) {
-    // 未登录，保存待提交数据，跳转到登录页
+    // 鏈櫥褰曪紝淇濆瓨寰呮彁浜ゆ暟鎹紝璺宠浆鍒扮櫥褰曢〉
     uni.setStorageSync('pendingAccount', JSON.stringify(formData))
     uni.navigateTo({ url: '/pages/login/index' })
     return
   }
 
-  uni.showLoading({ title: '添加中..' })
+  uni.showLoading({ title: '娣诲姞涓?.' })
   try {
     await saveAccount()
     uni.hideLoading()
-    uni.showToast({ title: '添加成功' })
-    // 清除待提交数据
+    uni.showToast({ title: '娣诲姞鎴愬姛' })
+    // 娓呴櫎寰呮彁浜ゆ暟鎹?
     uni.removeStorageSync('pendingAccount')
     setTimeout(() => uni.navigateBack(), 1500)
   } catch (err) {
     uni.hideLoading()
-    console.error('添加失败', err)
-    uni.showToast({ title: '添加失败', icon: 'none' })
+    console.error('娣诲姞澶辫触', err)
+    uni.showToast({ title: '娣诲姞澶辫触', icon: 'none' })
   }
 }
 </script>
