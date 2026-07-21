@@ -8,18 +8,18 @@
     <view class="content-wrapper">
       <view class="logo-section">
         <view class="logo-badge">
-          <text class="logo-icon">账</text>
+          <text class="logo-icon">璐?/text>
         </view>
-        <text class="app-title">记账本</text>
-        <text class="app-subtitle">轻松记录每一笔收支</text>
+        <text class="app-title">璁拌处鏈?/text>
+        <text class="app-subtitle">杞绘澗璁板綍姣忎竴绗旀敹鏀?/text>
       </view>
       <view class="login-card card">
         <button class="login-btn" :loading="logging" @tap="handleLogin">
-          <text class="login-btn-text">微信登录</text>
+          <text class="login-btn-text">寰俊鐧诲綍</text>
         </button>
-        <text class="login-hint">登录后即可保存和管理您的账目</text>
+        <text class="login-hint">鐧诲綍鍚庡嵆鍙繚瀛樺拰绠＄悊鎮ㄧ殑璐︾洰</text>
       </view>
-      <text class="footer-text">登录信息仅用于识别您的身份</text>
+      <text class="footer-text">鐧诲綍淇℃伅浠呯敤浜庤瘑鍒偍鐨勮韩浠?/text>
     </view>
   </view>
 </template>
@@ -40,15 +40,16 @@ async function handleLogin() {
     uni.setStorageSync('userId', authRes.data.userId)
     uni.setStorageSync('openid', authRes.data.openid)
 
-    // 登录后处理待提交的操作
-    await retryPendingAction()
-
-    // 返回上一页或首页
-    const pages = getCurrentPages()
-    if (pages.length > 1) {
-      uni.navigateBack()
+    const retried = await retryPendingAction()
+    if (retried) {
+      uni.reLaunch({ url: '/pages/index/index' })
     } else {
-      uni.switchTab({ url: '/pages/index/index' })
+      const pages = getCurrentPages()
+      if (pages.length > 1) {
+        uni.navigateBack()
+      } else {
+        uni.reLaunch({ url: '/pages/index/index' })
+      }
     }
   } catch (err) {
     console.error('登录失败', err)
@@ -59,17 +60,13 @@ async function handleLogin() {
 }
 
 async function retryPendingAction() {
+  let retried = false
   try {
-    // 尝试恢复待提交的账目数据
     const pendingStr = uni.getStorageSync('pendingAccount')
     if (pendingStr) {
       const pendingData = JSON.parse(pendingStr)
       uni.removeStorageSync('pendingAccount')
-
-      // 判断是新增还是编辑
-      const isEdit = pendingData.type !== null && pendingData.amount
-      if (isEdit) {
-        // 编辑模式：尝试重新保存
+      if (pendingData.type !== null && pendingData.amount) {
         const data = {
           type: pendingData.type,
           amount: parseFloat(pendingData.amount),
@@ -80,19 +77,34 @@ async function retryPendingAction() {
           remark: pendingData.remark || ''
         }
         await request('/account', 'POST', data)
-        uni.showToast({ title: '添加成功', icon: 'success' })
+        retried = true
       }
     }
-
-    // 尝试恢复待删除的账目
     const pendingDeleteId = uni.getStorageSync('pendingDelete')
     if (pendingDeleteId) {
       uni.removeStorageSync('pendingDelete')
       await request('/account/' + pendingDeleteId, 'DELETE')
-      uni.showToast({ title: '删除成功', icon: 'success' })
+      retried = true
     }
   } catch (err) {
     console.error('重试 pending 操作失败', err)
+  }
+  return retried
+}
+        await request('/account', 'POST', data)
+        uni.showToast({ title: '娣诲姞鎴愬姛', icon: 'success' })
+      }
+    }
+
+    // 灏濊瘯鎭㈠寰呭垹闄ょ殑璐︾洰
+    const pendingDeleteId = uni.getStorageSync('pendingDelete')
+    if (pendingDeleteId) {
+      uni.removeStorageSync('pendingDelete')
+      await request('/account/' + pendingDeleteId, 'DELETE')
+      uni.showToast({ title: '鍒犻櫎鎴愬姛', icon: 'success' })
+    }
+  } catch (err) {
+    console.error('閲嶈瘯 pending 鎿嶄綔澶辫触', err)
   }
 }
 </script>
