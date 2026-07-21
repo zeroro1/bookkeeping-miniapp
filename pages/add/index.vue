@@ -15,6 +15,7 @@
     </view>
   </view>
 </template>
+
 <script setup>
 import { ref, reactive, computed } from 'vue'
 import AccountForm from '@/components/AccountForm.vue'
@@ -23,7 +24,7 @@ import { EXPENSE_CATEGORIES, INCOME_CATEGORIES } from '../../utils/constant'
 
 const formData = reactive({ type: null, amount: '', date: '', category: '', fromAccount: '', toAccount: '', remark: '' })
 const categories = ref([])
-const categoryIndex = ref(0)
+const categoryIndex = ref(-1)
 const showCategory = computed(() => formData.type !== 3)
 
 const today = new Date()
