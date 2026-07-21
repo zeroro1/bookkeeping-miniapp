@@ -27,7 +27,7 @@
         <text class="form-label">分类</text>
       </view>
       <picker mode="selector" :range="categories" :value="categoryIndex" @change="onCategoryChange">
-        <view class="picker-value">{{ formData.category || '' }}</view>
+        <view class="picker-value">{{ categories[categoryIndex] || '请选择' }}</view>
       </picker>
     </view>
     <view class="card" v-if="formData.type === 3">
