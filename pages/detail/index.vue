@@ -1,7 +1,7 @@
 <template>
   <view class="container">
     <view class="page-header">
-      <text class="page-title">{{ isEdit ? '查看明细' : '添加明细' }}</text>
+      <text class="page-title">{{ isEdit ? '鏌ョ湅鏄庣粏' : '娣诲姞鏄庣粏' }}</text>
     </view>
     <AccountForm
       :formData="formData" :categories="categories" :categoryIndex="categoryIndex"
@@ -11,8 +11,8 @@
       @toAccountInput="onToAccountInput" @remarkInput="onRemarkInput"
     />
     <view class="bottom-bar" v-if="isEdit">
-      <button class="delete-btn" @tap="handleDelete">删除</button>
-      <button class="save-btn" :class="{ 'btn-disabled': !canSubmit }" @tap="handleSubmit">保存</button>
+      <button class="delete-btn" @tap="handleDelete">鍒犻櫎</button>
+      <button class="save-btn" :class="{ 'btn-disabled': !canSubmit }" @tap="handleSubmit">淇濆瓨</button>
     </view>
   </view>
 </template>
@@ -41,7 +41,7 @@ onMounted(async () => {
 })
 
 async function loadAccountDetail(id) {
-  uni.showLoading({ title: '加载中..' })
+  uni.showLoading({ title: '鍔犺浇涓?.' })
   try {
     const res = await request('/account/' + id, 'GET')
     const item = res.data
@@ -56,7 +56,7 @@ async function loadAccountDetail(id) {
     })
     updateCategories(item.type)
   } catch (err) {
-    console.error('加载失败', err)
+    console.error('鍔犺浇澶辫触', err)
   } finally {
     uni.hideLoading()
   }
@@ -67,7 +67,7 @@ function updateCategories(type) {
   if (type === 1) categories.value = INCOME_CATEGORIES
   else if (type === 2) categories.value = EXPENSE_CATEGORIES
   else categories.value = []
-  categoryIndex.value = -1; formData.category = ''
+  categoryIndex.value = 0; formData.category = ''
 }
 function onAmountInput(e) { formData.amount = e.detail.value }
 function onDateChange(e) { formData.date = e.detail.value }
@@ -81,8 +81,8 @@ function onToAccountInput(e) { formData.toAccount = e.detail.value }
 function onRemarkInput(e) { formData.remark = e.detail.value }
 
 async function handleSubmit() {
-  if (!formData.type) return uni.showToast({ title: '请选择类型', icon: 'none' })
-  if (!canSubmit.value) return uni.showToast({ title: '请输入有效金额', icon: 'none' })
+  if (!formData.type) return uni.showToast({ title: '璇烽€夋嫨绫诲瀷', icon: 'none' })
+  if (!canSubmit.value) return uni.showToast({ title: '璇疯緭鍏ユ湁鏁堥噾棰?, icon: 'none' })
 
   const token = uni.getStorageSync('token')
   if (!token) {
@@ -101,13 +101,13 @@ async function handleSubmit() {
     remark: formData.remark
   }
 
-  uni.showLoading({ title: '保存中..' })
+  uni.showLoading({ title: '淇濆瓨涓?.' })
   try {
     await request('/account/' + editId.value, 'PUT', data)
-    uni.showToast({ title: '保存成功' })
+    uni.showToast({ title: '淇濆瓨鎴愬姛' })
     setTimeout(() => uni.navigateBack(), 1500)
   } catch (err) {
-    console.error('提交失败', err)
+    console.error('鎻愪氦澶辫触', err)
   } finally {
     uni.hideLoading()
   }
@@ -115,8 +115,8 @@ async function handleSubmit() {
 
 function handleDelete() {
   uni.showModal({
-    title: '确认删除',
-    content: '确定要删除这条账目吗？',
+    title: '纭鍒犻櫎',
+    content: '纭畾瑕佸垹闄よ繖鏉¤处鐩悧锛?,
     success: async (res) => {
       if (res.confirm) {
         const token = uni.getStorageSync('token')
@@ -125,13 +125,13 @@ function handleDelete() {
           uni.navigateTo({ url: '/pages/login/index' })
           return
         }
-        uni.showLoading({ title: '删除中..' })
+        uni.showLoading({ title: '鍒犻櫎涓?.' })
         try {
           await request('/account/' + editId.value, 'DELETE')
-          uni.showToast({ title: '删除成功' })
+          uni.showToast({ title: '鍒犻櫎鎴愬姛' })
           setTimeout(() => uni.navigateBack(), 1500)
         } catch (err) {
-          console.error('删除失败', err)
+          console.error('鍒犻櫎澶辫触', err)
         } finally {
           uni.hideLoading()
         }

@@ -35,7 +35,7 @@ function updateCategories(type) {
   if (type === 1) categories.value = INCOME_CATEGORIES
   else if (type === 2) categories.value = EXPENSE_CATEGORIES
   else categories.value = []
-  categoryIndex.value = -1
+  categoryIndex.value = 0
   formData.category = ''
 }
 function onAmountInput(e) { formData.amount = e.detail.value }
