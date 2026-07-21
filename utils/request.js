@@ -1,12 +1,13 @@
-// 后端 API 地址（必须使用 HTTPS）
-const BASE_URL = 'http://120.26.28.23:80/api'
+// 后端 API 地址
+const BASE_URL = 'https://www.jizhangben.me/api'
 
 /**
  * 通用请求方法
+ * @param {boolean} needAuth - 是否需要携带 token，默认 true
  */
-export function request(url, method = 'GET', data = {}) {
+export function request(url, method = 'GET', data = {}, needAuth = true) {
   return new Promise((resolve, reject) => {
-    const token = uni.getStorageSync('token')
+    const token = needAuth ? uni.getStorageSync('token') : ''
     uni.request({
       url: BASE_URL + url,
       method: method,
@@ -24,9 +25,6 @@ export function request(url, method = 'GET', data = {}) {
             reject(res.data)
           }
         } else if (res.statusCode === 401) {
-          uni.removeStorageSync('token')
-          uni.removeStorageSync('userId')
-          uni.reLaunch({ url: '/pages/login/index' })
           reject({ code: 401, message: '未登录' })
         } else {
           uni.showToast({ title: '请求失败', icon: 'none' })

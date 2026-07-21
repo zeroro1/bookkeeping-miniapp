@@ -8,21 +8,9 @@
 
 <script setup>
 import { onLaunch } from '@dcloudio/uni-app'
-import { request } from './utils/request'
 
-onLaunch(async () => {
-  try {
-    const loginRes = await new Promise((resolve, reject) => {
-      uni.login({ provider: 'weixin', success: resolve, fail: reject })
-    })
-    const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
-    uni.setStorageSync('token', authRes.data.token)
-    uni.setStorageSync('userId', authRes.data.userId)
-    uni.setStorageSync('openid', authRes.data.openid)
-    uni.reLaunch({ url: '/pages/index/index' })
-  } catch (err) {
-    uni.reLaunch({ url: '/pages/login/index' })
-  }
+onLaunch(() => {
+  uni.reLaunch({ url: '/pages/index/index' })
 })
 </script>
 

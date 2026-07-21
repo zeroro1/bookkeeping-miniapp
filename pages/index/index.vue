@@ -112,8 +112,6 @@ const balanceClass = computed(() => {
 })
 
 async function loadAccounts() {
-  const userId = uni.getStorageSync('userId')
-  if (!userId) return
   try {
     const params = { month: currentMonth.value }
     if (activeType.value > 0) params.type = activeType.value
@@ -129,8 +127,7 @@ async function loadAccounts() {
     balance.value = (inc - exp).toFixed(2)
     accounts.value = list
   } catch (err) {
-    console.error('加载失败', err)
-    uni.showToast({ title: '加载失败', icon: 'none' })
+    accounts.value = []
   }
 }
 
@@ -165,11 +162,7 @@ onShow(() => { loadAccounts() })
   margin-bottom: 0;
   box-shadow: 0 8rpx 32rpx rgba(99, 102, 241, 0.25);
 }
-.header-top {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 28rpx;
-}
+.header-top { display: flex; justify-content: center; margin-bottom: 28rpx; }
 .summary-grid {
   display: flex; align-items: center;
   background: rgba(255,255,255,0.15);
