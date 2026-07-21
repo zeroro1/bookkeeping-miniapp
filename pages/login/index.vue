@@ -8,18 +8,18 @@
     <view class="content-wrapper">
       <view class="logo-section">
         <view class="logo-badge">
-          <text class="logo-icon">璐?/text>
+          <text class="logo-icon">閻?/text>
         </view>
-        <text class="app-title">璁拌处鏈?/text>
-        <text class="app-subtitle">杞绘澗璁板綍姣忎竴绗旀敹鏀?/text>
+        <text class="app-title">閻犱焦濯芥径鍕嫉?/text>
+        <text class="app-subtitle">閺夌偟绮妤冩媼閺夎法绉挎慨锝呯箣缁斿绮弮鈧弫褰掑绩?/text>
       </view>
       <view class="login-card card">
         <button class="login-btn" :loading="logging" @tap="handleLogin">
-          <text class="login-btn-text">寰俊鐧诲綍</text>
+          <text class="login-btn-text">鐎甸偊鍠曟穱濠囨儌鐠囪尙绉?/text>
         </button>
-        <text class="login-hint">鐧诲綍鍚庡嵆鍙繚瀛樺拰绠＄悊鎮ㄧ殑璐︾洰</text>
+        <text class="login-hint">闁谎嗩嚙缂嶅秹宕ユ惔鈥崇ギ闁告瑯鍨换姘扁偓娑櫭幏鎵不閿涘嫭鍊為柟顔哄妿濞堟垹鎷归敂鐐獥</text>
       </view>
-      <text class="footer-text">鐧诲綍淇℃伅浠呯敤浜庤瘑鍒偍鐨勮韩浠?/text>
+      <text class="footer-text">闁谎嗩嚙缂嶅秵绌遍埄鍐х礀濞寸姴鎳愰弫銈嗙鎼淬倗妲曢柛鎺濆亝閸嬪秹鎯冮崟顕€鐓╁ù?/text>
     </view>
   </view>
 </template>
@@ -40,16 +40,11 @@ async function handleLogin() {
     uni.setStorageSync('userId', authRes.data.userId)
     uni.setStorageSync('openid', authRes.data.openid)
 
-    const retried = await retryPendingAction()
-    if (retried) {
-      uni.reLaunch({ url: '/pages/index/index' })
+    const pages = getCurrentPages()
+    if (pages.length > 1) {
+      uni.navigateBack()
     } else {
-      const pages = getCurrentPages()
-      if (pages.length > 1) {
-        uni.navigateBack()
-      } else {
-        uni.reLaunch({ url: '/pages/index/index' })
-      }
+      uni.reLaunch({ url: '/pages/index/index' })
     }
   } catch (err) {
     console.error('登录失败', err)
@@ -58,56 +53,7 @@ async function handleLogin() {
     logging.value = false
   }
 }
-
-async function retryPendingAction() {
-  let retried = false
-  try {
-    const pendingStr = uni.getStorageSync('pendingAccount')
-    if (pendingStr) {
-      const pendingData = JSON.parse(pendingStr)
-      uni.removeStorageSync('pendingAccount')
-      if (pendingData.type !== null && pendingData.amount) {
-        const data = {
-          type: pendingData.type,
-          amount: parseFloat(pendingData.amount),
-          date: pendingData.date,
-          category: pendingData.category,
-          fromAccount: pendingData.fromAccount || '',
-          toAccount: pendingData.toAccount || '',
-          remark: pendingData.remark || ''
-        }
-        await request('/account', 'POST', data)
-        retried = true
-      }
-    }
-    const pendingDeleteId = uni.getStorageSync('pendingDelete')
-    if (pendingDeleteId) {
-      uni.removeStorageSync('pendingDelete')
-      await request('/account/' + pendingDeleteId, 'DELETE')
-      retried = true
-    }
-  } catch (err) {
-    console.error('重试 pending 操作失败', err)
-  }
-  return retried
-}
-        await request('/account', 'POST', data)
-        uni.showToast({ title: '娣诲姞鎴愬姛', icon: 'success' })
-      }
-    }
-
-    // 灏濊瘯鎭㈠寰呭垹闄ょ殑璐︾洰
-    const pendingDeleteId = uni.getStorageSync('pendingDelete')
-    if (pendingDeleteId) {
-      uni.removeStorageSync('pendingDelete')
-      await request('/account/' + pendingDeleteId, 'DELETE')
-      uni.showToast({ title: '鍒犻櫎鎴愬姛', icon: 'success' })
-    }
-  } catch (err) {
-    console.error('閲嶈瘯 pending 鎿嶄綔澶辫触', err)
-  }
-}
-</script>
+</script></script>
 
 <style scoped>
 .container {
