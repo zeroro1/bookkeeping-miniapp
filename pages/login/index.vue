@@ -8,21 +8,21 @@
     <view class="content-wrapper">
       <view class="logo-section">
         <view class="logo-badge">
-          <text class="logo-icon">閻?/text>
+          <text class="logo-icon">账</text>
         </view>
-        <text class="app-title">閻犱焦濯芥径鍕嫉?/text>
-        <text class="app-subtitle">閺夌偟绮妤冩媼閺夎法绉挎慨锝呯箣缁斿绮弮鈧弫褰掑绩?/text>
+        <text class="app-title">记账本</text>
+        <text class="app-subtitle">轻松记录每一笔收支</text>
       </view>
       <view class="login-card card">
         <button class="login-btn" :loading="logging" @tap="handleLogin">
-          <text class="login-btn-text">鐎甸偊鍠曟穱濠囨儌鐠囪尙绉?/text>
+          <text class="login-btn-text">微信登录</text>
         </button>
-        <text class="login-hint">闁谎嗩嚙缂嶅秹宕ユ惔鈥崇ギ闁告瑯鍨换姘扁偓娑櫭幏鎵不閿涘嫭鍊為柟顔哄妿濞堟垹鎷归敂鐐獥</text>
+        <text class="login-hint">登录后即可保存和管理您的账目</text>
       </view>
-      <text class="footer-text">闁谎嗩嚙缂嶅秵绌遍埄鍐х礀濞寸姴鎳愰弫銈嗙鎼淬倗妲曢柛鎺濆亝閸嬪秹鎯冮崟顕€鐓╁ù?/text>
+      <text class="footer-text">登录信息仅用于识别您的身份</text>
     </view>
   </view>
-</template>
+</template></template>
 
 <script setup>
 import { request } from '../../utils/request'
@@ -53,7 +53,7 @@ async function handleLogin() {
     logging.value = false
   }
 }
-</script></script>
+</script>
 
 <style scoped>
 .container {
