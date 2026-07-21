@@ -22,33 +22,33 @@
       <text class="footer-text">登录信息仅用于识别您的身份</text>
     </view>
   </view>
-</template></template>
+</template>
 
 <script setup>
-import { request } from '../../utils/request'
-import { ref } from 'vue'
+import { request } from "../../utils/request"
+import { ref } from "vue"
 const logging = ref(false)
 
 async function handleLogin() {
   logging.value = true
   try {
     const loginRes = await new Promise((resolve, reject) => {
-      uni.login({ provider: 'weixin', success: resolve, fail: reject })
+      uni.login({ provider: "weixin", success: resolve, fail: reject })
     })
-    const authRes = await request('/auth/login', 'POST', { code: loginRes.code })
-    uni.setStorageSync('token', authRes.data.token)
-    uni.setStorageSync('userId', authRes.data.userId)
-    uni.setStorageSync('openid', authRes.data.openid)
+    const authRes = await request("/auth/login", "POST", { code: loginRes.code })
+    uni.setStorageSync("token", authRes.data.token)
+    uni.setStorageSync("userId", authRes.data.userId)
+    uni.setStorageSync("openid", authRes.data.openid)
 
     const pages = getCurrentPages()
     if (pages.length > 1) {
       uni.navigateBack()
     } else {
-      uni.reLaunch({ url: '/pages/index/index' })
+      uni.reLaunch({ url: "/pages/index/index" })
     }
   } catch (err) {
-    console.error('登录失败', err)
-    uni.showToast({ title: '登录失败，请重试', icon: 'none' })
+    console.error("登录失败", err)
+    uni.showToast({ title: "登录失败，请重试", icon: "none" })
   } finally {
     logging.value = false
   }
